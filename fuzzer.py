@@ -1,5 +1,8 @@
 #coding=utf-8
 
+import copy
+import time
+
 from requests import Request, Session
 
 class Web_fuzzer(object):
@@ -12,14 +15,28 @@ class Web_fuzzer(object):
         self.params = params
         self.headers = headers
         self.data = data
+        
         self.delay = delay
         
-        print Web_fuzzer.FUZZE_TARGET
+        print dir(self)
     
     def get_fuzze_res(self, target, fuzze_word_list):
         if target in Web_fuzzer.FUZZE_TARGET:
-            pass
             
+            raw_value = getattr(self, target)
+            tmp = copy.deepcopy(self)
+            
+            for word in fuzze_word_list:
+                #_2_change = self.__fuzze(raw_value, word)
+                _2_change = word
+                setattr(tmp, target, _2_change)
+                
+                #yield tmp.__send_request()
+                #time.sleep(self.__delay)
+                
+    def __send_request():
+        #return res
+        pass
     
     def __fuzze(self, raw, fuzze_item):
         res = raw        
