@@ -1,8 +1,10 @@
+#coding=utf-8
 
-from fuzzer import Web_fuzzer
+import copy
 
-fu = Web_fuzzer(method='get')
+from fuzzer import Requests_fuzzer
 
-print fu.method
+fzzr = Requests_fuzzer(method='get', url='http://www.baidu.com', params='a={*}&b=123')
 
-fu.get_fuzze_res('method', ['fuck','123'])
+for res in fzzr.get_fuzze_res('params', ['1', '2', '3']):
+    print res.request.url
