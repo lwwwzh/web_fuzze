@@ -2,7 +2,6 @@
 
 import copy
 import time
-import re
 
 from requests import Request, Session
 
@@ -129,42 +128,3 @@ class Requests_fuzzer(object):
     def template(self, value):
         self.__template = value
  
-
-    VALID_PARAM = ('123', 'okff', '1ok2')
-    INVALID_PARAM = ('union select',)
-     
-    
-
-
-
-class Base_caler(object):
-    
-    CAL_DIMENSION = ('status', 'length', 'title', 'delay', 'invalid_keyword')
-    
-    TITLE_PATTERN = re.compile(r'<title>(.*?)</title>')
-    INVALID_KEYWORLD = (u'造成安全威胁', u'疑似黑客攻击', u'创宇盾', u'不合法参数', u'D盾', u'提交的内容包含危险')    
-    
-    
-    def deal_res(self, res, is_delay):        
-        result = {}
-        
-        result['status'] = res.status_code
-        result['length'] = len(res.text)
-        result['title'] = self.TITLE_PATTERN.findall(res.text)[0]
-        result['delay'] = is_delay
-        
-        is_valid = True
-        for invalid_word in self.INVALID_KEYWORLD:
-            if invalid_word in res.text:
-                is_valid = False
-                break            
-        result[invalid_keyword] = is_valid
-        
-        return result
-    
-    def study(self, req_type, res, is_delay):
-        pass
-    
-    def cal_res(self, res, is_delay):
-        pass
-        
