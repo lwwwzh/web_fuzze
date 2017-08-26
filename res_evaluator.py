@@ -1,13 +1,13 @@
-#coding=utf-8
+#coding: utf-8
 
 import re
 
-class Base_evaluate(object):
+class Base_evaluator(object):
 
     DIMENSION_WEIGHT = {}
     CAL_TOTAL_WEIGHT = 10
     
-    def cal_dimension_weight(self, res, *other_args):           
+    def cal_weight(self, res, *other_args):           
         result = {}
         
         dimension_list = self.DIMENSION_WEIGHT.keys()
@@ -34,7 +34,7 @@ class Base_evaluate(object):
         return result
 
         
-class Res_evaluate(Base_evaluate):
+class Res_evaluator(Base_evaluator):
 
     TITLE_PATTERN = re.compile(r'<title>(.*?)</title>')
     INVALID_KEYWORLD = (u'造成安全威胁', u'疑似黑客攻击', u'创宇盾', u'不合法参数', u'D盾', u'提交的内容包含危险')    
@@ -120,10 +120,8 @@ class Res_evaluate(Base_evaluate):
         else:
             return 0    
 
-
-
 def test():
-    cal = Res_evaluate()
+    cal = Res_evaluator()
     
     import requests
     import time
@@ -144,9 +142,9 @@ def test():
     time.sleep(1)
     res2 = requests.get('%s&a=union select' % url, headers=_headers)
 
-    dw_1 = cal.cal_dimension_weight(res1)
-    dw_2 = cal.cal_dimension_weight(res2, False)
-    dw_3 = cal.cal_dimension_weight(res3, False)
+    dw_1 = cal.cal_weight(res1)
+    dw_2 = cal.cal_weight(res2, False)
+    dw_3 = cal.cal_weight(res3, False)
     print dw_1
     print dw_2
     print dw_3

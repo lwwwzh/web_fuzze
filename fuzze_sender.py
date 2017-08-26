@@ -1,4 +1,4 @@
-#coding=utf-8
+#coding: utf-8
 
 import copy
 import time
@@ -19,17 +19,23 @@ class Requests_fuzzer(object):
         self.delay = delay
         self.template = template
     
+    def fuzze_by_template(self, fuzze_word_list):
+        for target in Requests_fuzzer.FUZZE_TARGET:
+            for res in self.get_fuzze_res(target, fuzze_word_list):
+                yield res
+    
     def get_fuzze_res(self, target, fuzze_word_list):
         if target in Requests_fuzzer.FUZZE_TARGET:            
-            raw_value = getattr(self, target)
-            tmp = copy.deepcopy(self)
+            raw_value = getattr(self, target)            
+            if isinstance(fuzze_word_list, basestring):
+                fuzze_word_list = [fuzze_word_list, ]
             
             for word in fuzze_word_list:
-                changed, _2_change = self.__fuzze(raw_value, word)
+                is_changed, word_changed = self.__fuzze(raw_value, word)
                 
-                if changed:
-                    setattr(tmp, target, _2_change)
-                    
+                if is_changed:
+                    tmp = copy.deepcopy(self)
+                    setattr(tmp, target, word_changed)                    
                     yield tmp.__send_request()
                     time.sleep(self.__delay)
                 
